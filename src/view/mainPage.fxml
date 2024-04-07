@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="936.0" scaleShape="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.mainPage">
+   <children>
+      <SplitPane dividerPositions="0.2633832976445396" layoutY="-2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="936.0">
+        <items>
+          <AnchorPane fx:id="leftAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="243.0">
+               <children>
+                  <Accordion layoutY="106.0" prefHeight="397.0" prefWidth="243.0">
+                    <panes>
+                      <TitledPane animated="false" prefHeight="159.0" prefWidth="243.0" text="Member Managment">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="112.0" prefWidth="241.0">
+                                 <children>
+                                    <Button fx:id="newMemberbt" mnemonicParsing="false" onAction="#newMemberClicked" prefHeight="38.0" prefWidth="243.0" text="New Member" />
+                                    <Button fx:id="updateMemberbt" layoutX="-1.0" layoutY="38.0" mnemonicParsing="false" onAction="#updateMemberClicked" prefHeight="38.0" prefWidth="243.0" text="Update/Delete Member" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                      </TitledPane>
+                      <TitledPane animated="false" text="Package Managment">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="newPackagebt" layoutX="-1.0" mnemonicParsing="false" onAction="#newPackageClicked" prefHeight="38.0" prefWidth="243.0" text="New Membership Package" />
+                                    <Button fx:id="updatePackagebt" layoutX="-1.0" layoutY="38.0" mnemonicParsing="false" onAction="#updatePackageClicked" prefHeight="38.0" prefWidth="243.0" text="Update/Delete MemberShip Package" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                      </TitledPane>
+                      <TitledPane animated="false" text="Snack Bar">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="sellbt" mnemonicParsing="false" onAction="#sellClicked" prefHeight="38.0" prefWidth="243.0" text="Sell" />
+                                    <Button fx:id="updateInvbt" layoutY="76.0" mnemonicParsing="false" onAction="#updateInvClicked" prefHeight="38.0" prefWidth="243.0" text="Update Inventory" />
+                                    <Button fx:id="registerItembt" layoutY="38.0" mnemonicParsing="false" onAction="#registerItemClicked" prefHeight="38.0" prefWidth="243.0" text="Register Item" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                      </TitledPane>
+                        <TitledPane animated="false" text="Payment">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="paymentbt" layoutX="-1.0" mnemonicParsing="false" onAction="#paymentClicked" prefHeight="38.0" prefWidth="243.0" text="Payment" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" text="Logs">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="bringLogsbt" mnemonicParsing="false" onAction="#logsClicked" prefHeight="38.0" prefWidth="243.0" text="Bring Logs" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TitledPane>
+                    </panes>
+                  </Accordion>
+                  <Button fx:id="mainPagebt" alignment="TOP_LEFT" layoutY="63.0" mnemonicParsing="false" onAction="#showMainPage" prefHeight="44.0" prefWidth="243.0" text="      Main Page">
+                     <font>
+                        <Font name="Cambria" size="20.0" />
+                     </font>
+                  </Button>
+                  <ImageView fitHeight="63.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../OneDrive/Masaüstü/operator%20vector.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="operatorNamelbl" layoutX="63.0" layoutY="23.0" text="Operator">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Label>
+               </children>
+            </AnchorPane>
+          <AnchorPane fx:id="rightAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="693.0" />
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

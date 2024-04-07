@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.bringLogs">
+   <children>
+      <TableView fx:id="logstb" prefHeight="385.0" prefWidth="693.0">
+         <columns>
+            <TableColumn fx:id="logID" prefWidth="63.0" text="logID" />
+            <TableColumn fx:id="logOperator" prefWidth="98.0" text="Operator Name" />
+            <TableColumn fx:id="logType" prefWidth="133.0" text="Log Type" />
+            <TableColumn fx:id="logDates" minWidth="0.0" prefWidth="131.0" text="Log Dates" />
+            <TableColumn fx:id="logDetails" minWidth="4.0" prefWidth="267.0" text="Log Details" />
+         </columns>
+      </TableView>
+      <TextArea fx:id="logDetailstxta" layoutY="385.0" prefHeight="260.0" prefWidth="693.0" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="693.0" scaleShape="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.notifications">
+   <children>
+      <Label fx:id="change" layoutX="301.0" layoutY="24.0" text="Notifications">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TableView fx:id="expiringMembershipstb" layoutX="357.0" layoutY="89.0" prefHeight="250.0" prefWidth="315.0">
+         <columns>
+            
+            <TableColumn fx:id="eMemberNametc" prefWidth="91.0" text="Name" />
+            <TableColumn fx:id="eMemberPackagetc" minWidth="7.0" prefWidth="51.0" text="Package" />
+            <TableColumn fx:id="ePhoneNumbertc" prefWidth="92.0" text="Phone Number" />
+            <TableColumn fx:id="eDatetc" minWidth="7.0" text="Expiring Date" />
+            
+         </columns>
+      </TableView>
+      <TableView fx:id="debtstb" layoutX="21.0" layoutY="89.0" prefHeight="250.0" prefWidth="315.0">
+         <columns>
+            <TableColumn fx:id="dMemberNametc" prefWidth="105.0" text="Name" />
+            <TableColumn fx:id="dPackageNametc" minWidth="6.0" prefWidth="51.0" text="Package Name" />
+            <TableColumn fx:id="dPhoneNumbertc" minWidth="6.0" prefWidth="91.0" text="Phone Number" />
+            <TableColumn fx:id="dDebttc" minWidth="6.0" prefWidth="67.0" text="Debt" />
+         </columns>
+      </TableView>
+      <TableView fx:id="inventorytb" layoutX="21.0" layoutY="388.0" prefHeight="250.0" prefWidth="315.0">
+         <columns>
+            <TableColumn fx:id="itemNametc" prefWidth="124.0" text="Item Name" />
+            <TableColumn fx:id="itemQuantitytc" prefWidth="67.0" text="Quantitiy" />
+            <TableColumn fx:id="sellingPricetc" prefWidth="20.0" text="Quantitiy" visible="false" />
+            <TableColumn fx:id="unitCosttc" prefWidth="14.0" text="Quantitiy" visible="false" />
+         </columns>
+      </TableView>
+      <TableView fx:id="logstb" layoutX="362.0" layoutY="388.0" prefHeight="250.0" prefWidth="315.0">
+         <columns>
+            <TableColumn fx:id="logID" prefWidth="63.0" text="logID" />
+            <TableColumn fx:id="logOperator" prefWidth="98.0" text="Operator Name" />
+            <TableColumn fx:id="logType" prefWidth="133.0" text="Log Type" />
+            <TableColumn fx:id="logDetails" minWidth="0.0" prefWidth="5.0" text="Log Details" visible="false" />
+            <TableColumn fx:id="logDate" minWidth="4.0" prefWidth="7.0" text="Log Date" visible="false" />
+         </columns>
+      </TableView>
+      <Label layoutX="100.0" layoutY="356.0" text="Snack Bar Inventory Alerts" />
+      <Label layoutX="480.0" layoutY="356.0" text="Last Operations" />
+      <Label layoutX="88.0" layoutY="54.0" text="Members With Outstanding Debts" />
+      <Label layoutX="456.0" layoutY="54.0" text="Memberships Expiring Soon" />
+   </children>
+</AnchorPane>

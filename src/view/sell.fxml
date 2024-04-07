@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="575.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.sell">
+   <children>
+      <Button fx:id="findbt" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" text="Find" />
+      <TextField fx:id="memberNameTxt" layoutX="53.0" layoutY="47.0" prefHeight="25.0" prefWidth="134.0" promptText="Member Name" />
+      <TableView fx:id="memberTableView" layoutX="14.0" layoutY="68.0" prefHeight="314.0" prefWidth="224.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+      <Button fx:id="addBalance" layoutX="12.0" layoutY="391.0" mnemonicParsing="false" onAction="#AddBalanceClicked" text="Add Balance" />
+      <TextField layoutX="101.0" layoutY="391.0" />
+   </children>
+</AnchorPane>

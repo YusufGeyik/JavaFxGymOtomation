@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.newMember">
+   <children>
+      <TextField fx:id="memberNametxt1" layoutX="126.0" layoutY="264.0" prefHeight="32.0" prefWidth="185.0" promptText="Name" />
+      <TextField fx:id="memberSurnametxt2" layoutX="126.0" layoutY="307.0" prefHeight="32.0" prefWidth="185.0" promptText="Surname" />
+      <TextField fx:id="numbertxt" layoutX="126.0" layoutY="352.0" prefHeight="32.0" prefWidth="185.0" promptText="0 5XX XXX XX XX" />
+      <ComboBox fx:id="genderbx" layoutX="126.0" layoutY="394.0" prefHeight="32.0" prefWidth="185.0" promptText="Select Gender" />
+      <DatePicker fx:id="birthDatepicker" layoutX="126.0" layoutY="434.0" prefHeight="32.0" prefWidth="185.0" promptText="Birth Date" />
+      <ComboBox fx:id="membershipbx" layoutX="325.0" layoutY="264.0" onAction="#membershipTypeChanged" prefHeight="32.0" prefWidth="185.0" promptText="Membership Type" />
+      <ComboBox fx:id="membershipPeriodbx" layoutX="325.0" layoutY="307.0" onAction="#periodChanged" prefHeight="32.0" prefWidth="185.0" promptText="Membership Period" />
+      <DatePicker fx:id="membershipStartDatepicker" layoutX="325.0" layoutY="352.0" prefHeight="32.0" prefWidth="185.0" promptText="Membership Start Date" />
+      <Button fx:id="savebt" layoutX="254.0" layoutY="494.0" mnemonicParsing="false" onAction="#saveMember" prefHeight="32.0" prefWidth="185.0" text="Save" />
+      <TextField fx:id="pricetxt" editable="false" layoutX="325.0" layoutY="398.0" prefHeight="32.0" prefWidth="185.0" promptText="Total Price">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <CheckBox fx:id="isPaid" layoutX="325.0" layoutY="442.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="185.0" text="&quot;Is the payment received?&quot; ">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </CheckBox>
+   </children>
+</AnchorPane>
