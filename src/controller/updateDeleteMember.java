@@ -2,6 +2,7 @@ package controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 
 import javafx.collections.FXCollections;
@@ -10,14 +11,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import model.FormFunctions;
 import model.database;
 import model.member;
 import model.membership;
+import model.transactions;
 
 
 public class updateDeleteMember {
@@ -37,10 +41,8 @@ public class updateDeleteMember {
 
     @FXML
     private TableColumn<member, LocalDate> endDatetc;
-
-    @FXML
-    private Button findbt;
-
+    
+    
     @FXML
     private ComboBox<String> genderbx;
 
@@ -101,26 +103,19 @@ public class updateDeleteMember {
     			{
     		   double paid=0;
     			member member=memberview.getSelectionModel().getSelectedItem();
-    			membership membership=FormFunctions.bringPackageObj(member.getMemberMembership());
-                String period=member.getMembershipPeriod().replaceAll("\\D", "");
-                long remainingDays=ChronoUnit.DAYS.between(LocalDate.now(),member.getMembershipEnd());//diğer remaining daysleri de dğeiştir olmazsa
+    			
+           
+             
     			double earnedPayment=0;
-                int months=Integer.parseInt(period);
-    			if(months>1) {
-    			paid=(double)((FormFunctions.getPackagePrice(FormFunctions.getPackages(), member.getMemberMembership())/30.416)*remainingDays*membership.getDiscountRate());
-    			System.out.println("price " +(FormFunctions.getPackagePrice(FormFunctions.getPackages(), member.getMemberMembership())/30)+ " days "+ remainingDays +"discount rate " + String.valueOf(membership.getDiscountRate()) );
-    			}
-    			else
-    			{
-    				paid=(double)((FormFunctions.getPackagePrice(FormFunctions.getPackages(), member.getMemberMembership())/30.416)*remainingDays);
-    				
-    			}
-    			//
+                
+    			Period restOfTime=Period.between(LocalDate.now(),member.getMembershipEnd());
+    			int paidMonthDiff=restOfTime.getMonths();
+    			paid=(member.getPaidBasePrice())*paidMonthDiff;
     			
     			earnedPayment=paid+member.getBalance();
     			
     			
-    			if(earnedPayment>0) //refund needed optinal to operator
+    			if(earnedPayment>0) //refund needed optional to operator
     			{
     				response=FormFunctions.alertMessageConf("Deleting Member", "Deleting Member Operation", "Refund amount " +(int)(Math.abs(earnedPayment))+" Will a refund be issued to the user?");
     			if(response.equals("YES")) //earnedpayment will be the same
@@ -135,12 +130,18 @@ public class updateDeleteMember {
     				
     			 
     				                                                                     
-    			//kulalnıcı alacaklı evet dedim elsedekini yazdırdı
     			
-    			}else if(earnedPayment<0 )  //  customer should pay
+    			
+    			}else if(earnedPayment<0 )  // customer should pay
     			{
     				
     				FormFunctions.alertMessageInf("Deleting Member", "Deleting Member Operation", "Member should pay " +(int)(Math.abs(earnedPayment))+" deleting Member Operation successfull");
+    				
+    			}
+    			else if(earnedPayment==0) 
+    			{
+    				
+    				FormFunctions.alertMessageInf("Deleting Member", "Deleting Member Operation", "Deleting member is successfull there is no need for extra payment or refund");
     				
     			}
     		
@@ -156,14 +157,23 @@ public class updateDeleteMember {
     			
     			
     			
-    			if(earnedPayment<0)
+    			if(earnedPayment<0)    //company pays
+    			{
     			 logDetails=member.getMemberName()+"\nPhone Number: "+member.getPhoneNumber()+"\n Former member paid for remaining balance:"+ Math.abs(earnedPayment);
+    			transactions transaction=new transactions(earnedPayment, LocalDate.now(), "Paid To Member For DELETİNG subscription");
+    			db.addTransaction(transaction);
     			
-    			else
+    			
+    			}
+    			else //customer pays
+    			{
     		     logDetails=member.getMemberName()+"\nPhone Number: "+member.getPhoneNumber()+"\nCompany Paid:"+earnedPayment;
-    			
+    		     transactions transaction=new transactions(earnedPayment, LocalDate.now(), "Customer paid for DELETİNG subscription process.");
+    		     db.addTransaction(transaction);
+     			
+    			}
     			FormFunctions.createLog("Deleting Member", logDetails);
-    			FormFunctions.setLogs(db.bringLogs());
+    		
     			db.closeConnection();
     			}
     			else // Dont want to delete 
@@ -201,42 +211,51 @@ public class updateDeleteMember {
     	
     }
 
-    @FXML
-    void findMember(ActionEvent event) {
 
-    	try{
-    	ObservableList<member> foundMembers=FormFunctions.findMembersByName( findMembertxt.getText());
-    	if(!foundMembers.equals(null)) 
-    	{
-    		FormFunctions.addDataToTableView(memberview, foundMembers,
+    	
+    	
+    	
+
+    @FXML
+    void findMember(KeyEvent event) {
+
+    	if(FormFunctions.isString(findMembertxt.getText())==true) {
+        	try{
+        	ObservableList<member> foundMembers=FormFunctions.findMembersByName( findMembertxt.getText());
+        	if(!foundMembers.equals(null)) 
+        	{
+        		FormFunctions.addDataToTableView(memberview, foundMembers,
+            			idtc, nametc,
+            			packageNametc, startDatetc,
+            			endDatetc,gendertc,phoneNumbertc,
+            			birthDatetc,balancetc,periodtc);
+        		
+        		
+        		
+        	}
+        	else 
+        	{
+        		FormFunctions.addDataToTableView(memberview, FormFunctions.getMembers(),
+            			idtc, nametc,
+            			packageNametc, startDatetc,
+            			endDatetc,gendertc,phoneNumbertc,
+            			birthDatetc,balancetc,periodtc);
+        	}
+        	
+        	}catch(Exception e) 
+        	{
+        		e.printStackTrace();
+        	}
+        	
+        }
+        else
+        	FormFunctions.addDataToTableView(memberview, FormFunctions.getMembers(),
         			idtc, nametc,
         			packageNametc, startDatetc,
         			endDatetc,gendertc,phoneNumbertc,
         			birthDatetc,balancetc,periodtc);
-    		
-    		
-    		
-    	}
-    	else 
-    	{
-    		FormFunctions.addDataToTableView(memberview, FormFunctions.getMembers(),
-        			idtc, nametc,
-        			packageNametc, startDatetc,
-        			endDatetc,gendertc,phoneNumbertc,
-        			birthDatetc,balancetc,periodtc);
-    	}
-    	
-    	}catch(Exception e) 
-    	{
-    		e.printStackTrace();
-    	}
-    	
     }
-    	
-    	
-    	
-    	
-    	
+
     
     	
     	
@@ -245,12 +264,22 @@ public class updateDeleteMember {
     	
     @FXML
     void updateMember(ActionEvent event) {
-        member oldVersionMember;
+        //if baseprice==0 membershipstart=Localdate.now()4
+    	
+    	
+    	
+    	if(FormFunctions.isString(memberNametxt.getText())==true ) {
+    	
+    	member oldVersionMember;
         member newVersionMember;
     	if(memberview.getSelectionModel().getSelectedIndex()!=-1) {
     	try {
     		
     	 oldVersionMember=memberview.getSelectionModel().getSelectedItem();
+    	 if(oldVersionMember.getPaidBasePrice()==0) 
+    	 {
+    	    oldVersionMember.setMembershipStart(LocalDate.now());  // ended membership startdate is corrected for further membership buying
+    	 }
     	//package and period
     	
     	String number=FormFunctions.parseAndCheckNumber(numbertxt.getText());
@@ -266,38 +295,45 @@ public class updateDeleteMember {
     		
     		
     	
-    		double paid;
+    		double restFromFirstMembership;
     		double diff;
     		double newCal=0;
-    		String oldPeriod=oldVersionMember.getMembershipPeriod().replaceAll("\\D", "");
-			int oldMonths=Integer.parseInt(oldPeriod);
+
 			String newPeriod=membershipperiodbx.getValue().replaceAll("\\D", "");
 			int newMonths=Integer.parseInt(newPeriod);
-    	    membership oldMembership=FormFunctions.bringPackageObj(oldVersionMember.getMemberMembership());
     	    membership newMembership=FormFunctions.bringPackageObj(membershipbx.getValue());
     	    LocalDate currentDate=LocalDate.now();
-	    	long dayDiff=ChronoUnit.DAYS.between(currentDate, oldVersionMember.getMembershipEnd());
 	    	
-    	   
-	    	 newVersionMember=new member(oldVersionMember.getMemberID(),memberNametxt.getText(),membershipperiodbx.getValue(),membershipbx.getValue(),genderbx.getValue(),number,birthdatepicker.getValue(),oldVersionMember.getMembershipStart(),LocalDate.now().plusMonths(newMonths) ,oldVersionMember.getBalance(),oldVersionMember.getCreationDate());
-    	    // discount yapacakmısın period bak sonra kalan gün hesapla  bunu old paket için bu süreyi çarp yeni paket için seçilen ayı çarp farkını bul işlem sonunda period ve membershipstart ile membershipendi güncelle
-    	   //kaç aylık almış
+	    	
+	    	Period restOfTime=Period.between(currentDate,oldVersionMember.getMembershipEnd());
+	         int paidMonthDiff=restOfTime.getMonths();
+			 int newPayMonthDiff=(int) ChronoUnit.MONTHS.between(currentDate, oldVersionMember.getMembershipStart().plusMonths(newMonths));
+			 
+			 if (oldVersionMember.getMembershipEnd().getDayOfMonth() < currentDate.getDayOfMonth() && oldVersionMember.getMembershipEnd().getDayOfMonth() > 1) {
+		            newPayMonthDiff++;
+		        }
+	    	
+	    	 newVersionMember=new member(oldVersionMember.getMemberID(),memberNametxt.getText(),membershipperiodbx.getValue()
+	    			 ,membershipbx.getValue(),genderbx.getValue(),number,birthdatepicker.getValue(),oldVersionMember.getMembershipStart()
+	    			 ,LocalDate.now().plusMonths(newMonths) ,oldVersionMember.getBalance(),oldVersionMember.getCreationDate(),0);
     	    
-    	    if(oldMonths>1) 
-    	    {
+    	    
+    	   
+	    	 restFromFirstMembership=oldVersionMember.getPaidBasePrice()*paidMonthDiff;
     	    	
-    	    	
-    	    	paid=(double) (dayDiff*(oldMembership.getMembershipPrice()/30.416)*oldMembership.getDiscountRate()); // paid for remaining days in current prices
     	    	
     	    	if(newMonths>1) 
     	    	{
-    	    		newCal=(double) (newMonths*newMembership.getMembershipPrice()*newMembership.getDiscountRate());  //new package cost
-    	    		diff=paid-newCal;
+    	    		
+    	    		newCal=(double) ((newMembership.getMembershipPrice()*newMembership.getDiscountRate())*newPayMonthDiff);  //cost for the remaining  
+    	    		diff=restFromFirstMembership-newCal;
+    	    		newVersionMember.setPaidBasePrice((newMembership.getMembershipPrice()*newMembership.getDiscountRate())); 
     	    		decideWhoPaysAndUpdate(diff,newVersionMember,oldVersionMember);
     	    	}else if(newMonths==1) 
     	    	{
-    	    		newCal=(double) (newMonths*newMembership.getMembershipPrice());
-    	    		diff=paid-newCal;
+    	    		newCal=(double) ((newMembership.getMembershipPrice())*newPayMonthDiff);
+    	    		diff=restFromFirstMembership-newCal;
+    	    		newVersionMember.setPaidBasePrice((newMembership.getMembershipPrice())); 
     	    		decideWhoPaysAndUpdate(diff,newVersionMember,oldVersionMember);
     	    		
     	    	}
@@ -306,28 +342,7 @@ public class updateDeleteMember {
     	    	
     	    	
     	    	
-    	    }
-    	    else if(oldMonths==1) 
-    	    {
-    	    	paid=(double) (dayDiff*(oldMembership.getMembershipPrice()/30.416));
-    	    	if(newMonths>1) 
-    	    	{
-    	    
-    	    	newCal=(double) (newMonths*newMembership.getMembershipPrice()*newMembership.getDiscountRate()); //new package cost
-    	    	diff=paid-newCal;
-    	    	decideWhoPaysAndUpdate(diff,newVersionMember,oldVersionMember);
-    	    	
-    	    	
-    	    	}
-    	    	else if(newMonths==1) 
-    	    	{
-    	    		newCal=(double) (newMonths*newMembership.getMembershipPrice()); //new package cost
-    	    		diff=paid-newCal;
-    	    		decideWhoPaysAndUpdate(diff,newVersionMember,oldVersionMember);
-    	    		
-    	    	}
-    	    	
-    	    }
+    	   
     	    
     	    
     	    
@@ -384,7 +399,10 @@ public class updateDeleteMember {
     			endDatetc,gendertc,phoneNumbertc,
     			birthDatetc,balancetc,periodtc);
    
-    
+    }
+    	else
+    		FormFunctions.alertMessageErr("Updating Member Operation", "Failed", "Please provide valid values.");
+    	
     }
 
     
@@ -392,10 +410,10 @@ public class updateDeleteMember {
     { 
     	model.database db=new model.database();
     	if(diff>0) //company should pay optional
-    	{
+    	{  
     		String response=FormFunctions.alertMessageConf("Updating Member", "Updating Member Operation","Does company willing to make repayment "+diff+"?");
-    		if(response.equals("YES")) 
-    		{
+    		if(response.equals("YES")) //company pay
+    		{   
     			newVersionMember.setBalance(newVersionMember.getBalance()+diff);
     			db.updateMember(newVersionMember,oldVersionMember,"Update Member");
     			FormFunctions.alertMessageInf("Updating Member", "Updating Member Operation","Member successfully updated.The required payment amount has been deducted from the user's balance." );
@@ -460,6 +478,21 @@ public class updateDeleteMember {
     	        }
     	    }
     	});
+           
+           birthdatepicker.setDayCellFactory(call->new DateCell() 
+           {
+          	 @Override
+          	 public void updateItem(LocalDate date,boolean empty) 
+          	 {
+          		 super.updateItem(date,empty);
+          		 setDisable(date.compareTo(LocalDate.now())>0);
+          		 
+          		 
+          	 }
+          	 
+          	 
+          	 
+           });
     	
     	
     	//combo box settings

@@ -51,6 +51,6 @@
       <Label layoutX="100.0" layoutY="356.0" text="Snack Bar Inventory Alerts" />
       <Label layoutX="480.0" layoutY="356.0" text="Last Operations" />
       <Label layoutX="88.0" layoutY="54.0" text="Members With Outstanding Debts" />
-      <Label layoutX="456.0" layoutY="54.0" text="Memberships Expiring Soon" />
+      <Label layoutX="412.0" layoutY="54.0" text="Memberships Expiring Soon or Expired" />
    </children>
 </AnchorPane>

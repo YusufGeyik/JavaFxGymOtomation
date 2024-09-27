@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.bringLogs">
    <children>
-      <TableView fx:id="logstb" prefHeight="385.0" prefWidth="693.0">
+      <TableView fx:id="logstb" layoutY="131.0" prefHeight="268.0" prefWidth="693.0">
          <columns>
             <TableColumn fx:id="logID" prefWidth="63.0" text="logID" />
             <TableColumn fx:id="logOperator" prefWidth="98.0" text="Operator Name" />
@@ -16,6 +21,17 @@
             <TableColumn fx:id="logDetails" minWidth="4.0" prefWidth="267.0" text="Log Details" />
          </columns>
       </TableView>
-      <TextArea fx:id="logDetailstxta" layoutY="385.0" prefHeight="260.0" prefWidth="693.0" />
+      <TextArea fx:id="logDetailstxta" layoutY="399.0" prefHeight="246.0" prefWidth="693.0" />
+      <Label layoutX="14.0" layoutY="23.0" text="Bring Logs">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="startDatepicker" editable="false" layoutX="457.0" layoutY="34.0" />
+      <DatePicker fx:id="endDatepicker" editable="false" layoutX="457.0" layoutY="72.0" />
+      <Label layoutX="373.0" layoutY="38.0" text="Start Date" />
+      <Label layoutX="373.0" layoutY="76.0" text="End Date" />
+      <Button fx:id="filterByIdbt" layoutX="457.0" layoutY="106.0" mnemonicParsing="false" onAction="#filterClicked" prefHeight="25.0" prefWidth="174.0" text="Filter List by Date" />
+      <TextField fx:id="searchtxt" layoutY="106.0" onKeyReleased="#searchInputReceived" prefHeight="25.0" prefWidth="219.0" promptText="Search in Operator Name and Details" />
    </children>
 </AnchorPane>

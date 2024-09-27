@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,6 +18,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import model.FormFunctions;
 import model.logs;
 import model.membership;
@@ -79,54 +83,103 @@ public class createPackage {
 
 	    @FXML
 	    private Button saveBt;
+	    @FXML
+	    private TextField searchtxt;
+	    @FXML
+	    void searchInputReceived(KeyEvent event) {
+
+	    	try {
+	    	 	
+	        	if(searchtxt.getText().isEmpty()) //button clicked without any input
+	        	{
+	        	
+	        		FormFunctions.addDataToTableView(cPackageTable, FormFunctions.getPackages(), packageName,packagePrice,accesibleZones,periods,discountRate);
+	        		
+	        
+	        		
+	        	}
+	        	else //there is an input
+	        	{ 
+	        	
+	        		ObservableList<membership> foundPackages=FXCollections.observableArrayList();
+	        	for(membership membershipPackage : FormFunctions.getPackages())
+	        	{
+	        		
+	        
+	        		if(membershipPackage.getMembershipName().toLowerCase().contains(searchtxt.getText()))
+	        		{
+	        			foundPackages.add(membershipPackage);
+	        			
+	        		}
+	        	}
+	        	
+	        	
+	        	FormFunctions.addDataToTableView(cPackageTable, foundPackages, packageName,packagePrice,accesibleZones,periods,discountRate);
+	        	
+	      
+	        	}
+	        	
+	        	}catch(Exception e) 
+	        	{
+	        		
+	        		e.printStackTrace();
+	        		
+	        	}
+	    }
 
     @FXML
     void SaveMemberShipPackage(ActionEvent event) {
+    	List<CheckBox> zones=new ArrayList<>();
+	    List<CheckBox> lperiods=new ArrayList<>();
+	    zones.add(cFitnessChckbx);     
+	    zones.add(cPoolchckbx);     
+	    zones.add(cSpiningChckbx); 
+	    zones.add(cZumbaChckbx); 
+	    
+	    lperiods.add(cOneMonth);
+	    lperiods.add(cThreeMonths);
+	    lperiods.add(cSixMonths);
+	    lperiods.add(cTwelveMonths);
+	        
+
+	
+	String zaccesibleZones="";
+	
+	for(CheckBox z : zones) 
+	{
+		if(z.isSelected())
+			zaccesibleZones+=z.getText()+" ";
+		
+	}
+	
+	String pPeriods="";
+	
+	for(CheckBox p : lperiods) 
+	{
+		if(p.isSelected())
+			pPeriods+=p.getText()+",";
+		
+	}
+	
+    	if(FormFunctions.isString(cPackageNameTxt.getText())==true 
+    			&& FormFunctions.isDouble(cPackagePriceTxt.getText())==true 
+    			&& FormFunctions.isDouble(discountRatetxt.getText())==true && !accesibleZones.equals("") && !pPeriods.equals("") ) {
+    	
+    	
     	try {
     		membership newMembership;
     	double discountRate=1-(Double.parseDouble(discountRatetxt.getText())/100); //ready to multiply with base price for long-term memberships.
     	
-    	System.out.println(discountRate);
+    	
     	try {
     	
-    		List<CheckBox> zones=new ArrayList<>();
-    	    List<CheckBox> periods=new ArrayList<>();
-    	    zones.add(cFitnessChckbx);     
-    	    zones.add(cPoolchckbx);     
-    	    zones.add(cSpiningChckbx); 
-    	    zones.add(cZumbaChckbx); 
-    	    
-    	    periods.add(cOneMonth);
-    	    periods.add(cThreeMonths);
-    	    periods.add(cSixMonths);
-    	    periods.add(cTwelveMonths);
-    	        
-
-    	
-    	String accesibleZones="";
-    	
-    	for(CheckBox z : zones) 
-    	{
-    		if(z.isSelected())
-    			accesibleZones+=z.getText()+" ";
-    		
-    	}
-    	
-    	String pPeriods="";
-    	
-    	for(CheckBox p : periods) 
-    	{
-    		if(p.isSelected())
-    			pPeriods+=p.getText()+"  ";
-    		
-    	}
     	
     	
        
     	      newMembership=new model.membership(
     			cPackageNameTxt.getText(),
     			Integer.parseInt(cPackagePriceTxt.getText()),
-    			accesibleZones,
+    			zaccesibleZones,
     			pPeriods,
     			discountRate
     			);
@@ -157,6 +210,9 @@ public class createPackage {
     	
     	FormFunctions.addDataToTableView(cPackageTable, FormFunctions.getPackages(), packageName,packagePrice,accesibleZones,periods,discountRate);
     	
+    }
+    	else
+    		FormFunctions.alertMessageErr("Creating Package Operation", "Failed", "Please provide valid values.");
     }
     
 

@@ -1,6 +1,7 @@
 package controller;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
@@ -10,9 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import model.FormFunctions;
 import model.items;
 import model.member;
+import model.transactions;
 
 public class registerItem {
 
@@ -21,9 +24,8 @@ public class registerItem {
 
     @FXML
     private URL location;
-
-    @FXML
-    private Button findItem;
+    
+    
 
     @FXML
     private TextField findItemtxt;
@@ -58,8 +60,10 @@ public class registerItem {
     private TextField unitCosttxt;
 
     @FXML
-    void findItemClicked(ActionEvent event) {
+    void findItemClicked(KeyEvent event) {
 
+    	if(FormFunctions.isString(findItemtxt.getText())==true) {
+    	
     	try{
         	ObservableList<items> foundItems=FormFunctions.findItemsByName( findItemtxt.getText());
         	if(!foundItems.equals(null)) 
@@ -85,13 +89,20 @@ public class registerItem {
         		e.printStackTrace();
         	}
         	
-    	
+    }
+    else
+    	FormFunctions.addDataToTableView(itemView,FormFunctions.getItems(), itemName,
+    			stockCount, sellingPrice,
+    			unitCost);
     	
     }
 
     @FXML
     void registerItemClicked(ActionEvent event) {
 
+    	if(FormFunctions.isString(itemNametxt.getText())==true && FormFunctions.isDouble(sellingPricetxt.getText())==true 
+    			&& FormFunctions.isDouble(unitCosttxt.getText())==true && FormFunctions.isInteger(stockCounttxt.getText())==true    ) {
+    	
     	try 
     	{
     		boolean validName=FormFunctions.isString(itemNametxt.getText());
@@ -117,6 +128,9 @@ public class registerItem {
     			model.database db=new model.database();
     			db.registerItem(item);
     			FormFunctions.setItems(db.bringItems());
+    			transactions transaction=new transactions(stockCount*unitCost, LocalDate.now(), "SnackBar new item purchase");
+    	    	db.addTransaction(transaction);
+    			
     			db.closeConnection();
     			itemNametxt.setText("");
     			stockCounttxt.setText("");
@@ -144,6 +158,11 @@ public class registerItem {
     	FormFunctions.addDataToTableView(itemView,FormFunctions.getItems(), itemName,
     			stockCount, sellingPrice,
     			unitCost);
+    	
+    }
+    else
+    	FormFunctions.alertMessageErr("Registerin Item Operation", "Failed", "Please provide valid values.");
+    	
     }
 
     @FXML

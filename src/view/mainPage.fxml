@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -22,8 +21,8 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="112.0" prefWidth="241.0">
                                  <children>
-                                    <Button fx:id="newMemberbt" mnemonicParsing="false" onAction="#newMemberClicked" prefHeight="38.0" prefWidth="243.0" text="New Member" />
-                                    <Button fx:id="updateMemberbt" layoutX="-1.0" layoutY="38.0" mnemonicParsing="false" onAction="#updateMemberClicked" prefHeight="38.0" prefWidth="243.0" text="Update/Delete Member" />
+                                    <Button fx:id="newMemberbt" layoutX="-1.0" mnemonicParsing="false" onAction="#newMemberClicked" prefHeight="44.0" prefWidth="243.0" text="New Member" />
+                                    <Button fx:id="updateMemberbt" layoutX="-1.0" layoutY="44.0" mnemonicParsing="false" onAction="#updateMemberClicked" prefHeight="44.0" prefWidth="243.0" text="Update/Delete Member" />
                                  </children>
                               </AnchorPane>
                         </content>
@@ -44,19 +43,19 @@
                               <Font size="20.0" />
                            </font>
                       </TitledPane>
-                      <TitledPane animated="false" text="Snack Bar">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <Button fx:id="sellbt" mnemonicParsing="false" onAction="#sellClicked" prefHeight="38.0" prefWidth="243.0" text="Sell" />
-                                    <Button fx:id="updateInvbt" layoutY="76.0" mnemonicParsing="false" onAction="#updateInvClicked" prefHeight="38.0" prefWidth="243.0" text="Update Inventory" />
-                                    <Button fx:id="registerItembt" layoutY="38.0" mnemonicParsing="false" onAction="#registerItemClicked" prefHeight="38.0" prefWidth="243.0" text="Register Item" />
-                                 </children>
-                              </AnchorPane>
-                        </content>
+                      <TitledPane fx:id="snackBartilted" animated="false" text="Snack Bar">
                            <font>
                               <Font size="20.0" />
                            </font>
+                           <content>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="sellbt" layoutY="-1.0" mnemonicParsing="false" onAction="#sellClicked" prefHeight="38.0" prefWidth="243.0" text="Sell" />
+                                    <Button fx:id="updateInvbt" layoutY="37.0" mnemonicParsing="false" onAction="#updateInvClicked" prefHeight="37.0" prefWidth="243.0" text="Update Inventory" />
+                                    <Button fx:id="registerItembt" layoutY="74.0" mnemonicParsing="false" onAction="#registerItemClicked" prefHeight="38.0" prefWidth="243.0" text="Register Item" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
                       </TitledPane>
                         <TitledPane animated="false" text="Payment">
                           <content>
@@ -82,6 +81,19 @@
                               <Font size="20.0" />
                            </font>
                         </TitledPane>
+                        <TitledPane fx:id="adminPaneltilted" animated="false" text="admin panel">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="111.0" prefWidth="241.0">
+                                 <children>
+                                    <Button fx:id="operatorUpdate" mnemonicParsing="false" onAction="#operatorUpdateClicked" prefHeight="38.0" prefWidth="243.0" text="Operator Update" />
+                                    <Button fx:id="revenues" layoutY="38.0" mnemonicParsing="false" onAction="#revenuesClicked" prefHeight="38.0" prefWidth="243.0" text="Revenues and Statistics" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TitledPane>
                     </panes>
                   </Accordion>
                   <Button fx:id="mainPagebt" alignment="TOP_LEFT" layoutY="63.0" mnemonicParsing="false" onAction="#showMainPage" prefHeight="44.0" prefWidth="243.0" text="      Main Page">
@@ -89,15 +101,12 @@
                         <Font name="Cambria" size="20.0" />
                      </font>
                   </Button>
-                  <ImageView fitHeight="63.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../OneDrive/Masaüstü/operator%20vector.png" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="operatorVector" fitHeight="63.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="operatorNamelbl" layoutX="63.0" layoutY="23.0" text="Operator">
                      <font>
                         <Font size="20.0" />
                      </font></Label>
+                  <Button fx:id="logOut" layoutX="155.0" layoutY="26.0" mnemonicParsing="false" onAction="#logOutClicked" prefHeight="22.0" prefWidth="63.0" text="Log Out" />
                </children>
             </AnchorPane>
           <AnchorPane fx:id="rightAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="693.0" />

@@ -3,6 +3,8 @@ package controller;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -100,7 +102,6 @@ public class notifications {
     	ObservableList<member> memberExpiringMembership=FXCollections.observableArrayList();
     	ObservableList<member>memberWithDebts=FXCollections.observableArrayList();
     	ObservableList<items> stockProblem=FXCollections.observableArrayList();
-    	ObservableList<logs>newLogs=FXCollections.observableArrayList();
     	
     	
     	for(items i:FormFunctions.getItems()) 
@@ -119,7 +120,7 @@ public class notifications {
     	{
     		if(m.getBalance()<0) 
     		{
-    			System.out.println(m.getBalance());
+    			
     			memberWithDebts.add(m);
     		}
     		
@@ -150,19 +151,15 @@ public class notifications {
     	
     }
     				
-    	for (model.logs log:FormFunctions.getLogs()) 
-    	{
-    		long oldInDays=ChronoUnit.DAYS.between(LocalDate.now(), log.getLogDate());
-    		if(oldInDays<=3) 
-    		{
-    			newLogs.add(log);
-    			
-    			
-    		}
-    		
-    		
-    	}			
-    	FormFunctions.addLogsToTable(logstb, newLogs, logID, logType, logOperator, logDate, logDetails);
+    				String sql="SELECT * FROM logs WHERE logDate=?";
+    			 	List<Object> psValues=new ArrayList<>();
+    			 	psValues.add(LocalDate.now());
+    			 	
+    			       model.database database=new model.database();
+    			       ObservableList<logs> todaysLogs=database.logOperations(sql, psValues);
+    			    	
+    			    	database.closeConnection();		
+    	FormFunctions.addLogsToTable(logstb, todaysLogs, logID, logType, logOperator, logDate, logDetails);
     
     
     }

@@ -3,19 +3,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="398.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.loginPage">
+<AnchorPane fx:id="anchorPane" prefHeight="398.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.loginPage">
    <children>
-      <ImageView fitHeight="400.0" fitWidth="400.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../OneDrive/Masaüstü/gymotomation.png" />
-         </image>
-      </ImageView>
-      <PasswordField fx:id="passtf" layoutX="126.0" layoutY="185.0" prefHeight="25.0" prefWidth="149.0" promptText="Password" />
+      <ImageView fx:id="backgroundImgview" fitHeight="400.0" fitWidth="400.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true" />
       <TextField fx:id="optNametf" layoutX="126.0" layoutY="160.0" prefHeight="25.0" prefWidth="149.0" promptText="Operator Name" />
+      <PasswordField fx:id="passtf" layoutX="126.0" layoutY="185.0" prefHeight="25.0" prefWidth="149.0" promptText="Password" />
       <Button fx:id="loginbt" layoutX="126.0" layoutY="212.0" mnemonicParsing="false" onAction="#loginClick" prefHeight="25.0" prefWidth="149.0" text="Login" />
+      <Button fx:id="registerOperatorbt" layoutX="126.0" layoutY="237.0" mnemonicParsing="false" onAction="#registerOperatorClicked" prefHeight="25.0" prefWidth="149.0" text="Register Operator" />
    </children>
 </AnchorPane>

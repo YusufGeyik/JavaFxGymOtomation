@@ -34,8 +34,9 @@ public class database {
 	 {
 		 try  {
 	    	 Connection connection = DriverManager.getConnection(url,username,password);
-		     System.out.println("Database connected!");
+		     
 		     this.connection=connection;
+		   
 		     
 		 } catch (SQLException e) {
 		     throw new IllegalStateException("Cannot connect the database!", e);
@@ -53,10 +54,52 @@ public class database {
 	//sql bağlantısı için bir fonksiyon yaz
 	//sql işlemleri için sql command bağlantı vb alan bir fonksiyon.
 	
-	public  boolean Login(String name,String password) 
+	 public ObservableList<Operator> bringOperators()
+	 {
+		 ObservableList<Operator> operators=FXCollections.observableArrayList();
+		 String sql="Select * FROM operators";
+		 try {
+			Statement statement=this.connection.createStatement();
+			ResultSet result=statement.executeQuery(sql);
+			while(result.next()) 
+			{
+				 
+				  
+				operators.add(new Operator(result.getString("operatorName"), result.getString("operatorPassword"),result.getBoolean("registerMember"), result.getBoolean("updateMember"), result.getBoolean("createPackage"), result.getBoolean("updatePackage"), result.getBoolean("sell"), result.getBoolean("registerInv"), result.getBoolean("updateInv"), result.getBoolean("accessToLogs"), result.getBoolean("takesPayment"), Roles.valueOf(result.getString("Role"))));
+				
+				
+			}
+			
+			return operators;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
+		 
+		 return operators;
+		 
+	 }
+	 
+	 
+	 public void updateExpiredMemberships() 
+	 {
+		 
+		 String sql="UPDATE members SET paidBasePrice = 0 WHERE membershipEnd < CURDATE();";
+		 try {
+		 Statement statement = connection.createStatement();
+	            statement.executeUpdate(sql);
+		 }catch(Exception e) {
+		 e.printStackTrace();
+		 }
+		 
+	 }
+	 
+	public  model.Operator Login(String name,String password) 
 	{
 	
-		System.out.println("login");
+		
 		
 		try 
 		{
@@ -67,7 +110,7 @@ public class database {
 			ResultSet result=statement.executeQuery();
 			
 			if(result.next())
-				return true;
+				return new model.Operator(name, password, result.getBoolean("registerMember"),result.getBoolean("updateMember"), result.getBoolean("createPackage"),result.getBoolean("updatePackage"), result.getBoolean("sell"), result.getBoolean("registerInv"), result.getBoolean("updateInv"), result.getBoolean("accessToLogs"), result.getBoolean("takesPayment"), Roles.valueOf(result.getString("Role")));
 		
 		}catch(SQLException e) 
 		{
@@ -75,91 +118,154 @@ public class database {
 		}
 		
 	   closeConnection();
-		return false;
+		return null;
 		
 	}
 	
 	
-	
-	
-	
-	
-	public void deletePackageCalculations(double oldDiscountRate,double newDiscountRate, String oldPackageName,String newPackageName) throws ParseException 
-	{   
-		membership deletedMembership=FormFunctions.bringPackageObj(oldPackageName);
-	    membership transitionedMembership=FormFunctions.bringPackageObj(newPackageName);
-	    String logDetails=deletedMembership.getMembershipName()+"Deleted,payments made,members transitioned to"+transitionedMembership.getMembershipName()+"\nTransitioned Members\n";
-		double oldPrice=FormFunctions.getPackagePrice(FormFunctions.getPackages(),oldPackageName);
-		double  newPrice=FormFunctions.getPackagePrice(FormFunctions.getPackages(),oldPackageName);
-		for(member member: FormFunctions.getMembers()) 
+	public void operatorDataOperations(model.Operator operator,String sql,List<Object> psValues)  
+	{
+		try {
+		PreparedStatement ps=this.connection.prepareStatement(sql);
+		
+		
+		for(int i=0; i<psValues.size();i++) 
 		{
-			logDetails+="\n"+member.getMemberID()+" "+member.getMemberName();
-			if(member.getMemberMembership().equals(oldPackageName))
-			{   member oldMember=member;
-				int id=member.getMemberID();
-				
-				String period=member.getMembershipPeriod().replaceAll("\\D", "");
-				int months=Integer.parseInt(period);
-				LocalDate membershipEnd=member.getMembershipEnd();
-				LocalDate currentDate=LocalDate.now();
-				SimpleDateFormat dFormat=new SimpleDateFormat("yyyy/MM/dd");
-				
-				long dayDiff=ChronoUnit.DAYS.between(currentDate, membershipEnd);
-				
-				if(months>1 && dayDiff>=0) {
-					
-					
-				double paid = ((oldPrice/30.416)*oldDiscountRate*dayDiff);//Calculation of the rest days in oldmembership
-				double newServicePrice=((newPrice/30.416)*newDiscountRate*dayDiff);
-				member.setBalance(member.getBalance()+(paid-newServicePrice)); // - if the member has to pay + if the company has to pay;
-				member.setMemberMembership(newPackageName);
-				
-				updateMember(member,oldMember,"Package Transition Due To Deleted Package");
-				
-				}
-				else if(months==1 && dayDiff>=0)  //without discount rate due to short membershipPeriod
-				{
-					double paid = ((oldPrice/30.416)*dayDiff);
-					double newServicePrice=((newPrice/30.416)*dayDiff);
-					member.setBalance(member.getBalance()+(paid-newServicePrice)); // - if the member has to pay + if the company has to pay;
-					member.setMemberMembership(newPackageName);
-					updateMember(member,oldMember,"Package Transition Due To Deleted Package");
-				}
-				else if(dayDiff<0) 
-				{
-					
-					member.setMemberMembership(newPackageName);
-					updateMember(member,oldMember,"Package Transition Due To Deleted Package");
-					
-				}
-				
-				
-				
-				
-				
-			}
 			
-			FormFunctions.createLog("Deleted Package", logDetails);
-			database db=new database();
-			FormFunctions.setLogs(db.bringLogs());
-			db.closeConnection();
+			
+		 if(psValues.get(i) instanceof String) 
+		 {
+			 
+			 ps.setString(i+1,(String)psValues.get(i));
+			 
+			 
+		 }
+		 else if(psValues.get(i) instanceof Boolean) 
+		 {
+			 
+			 ps.setBoolean(i+1, (Boolean)psValues.get(i));
+			 
+			 
+		 }
+			
+			
+			
+			
+		}//psvalues for
+		
+	  
+	    ps.executeUpdate();
+	    
+	    
+	    FormFunctions.alertMessageInf("Operator Data Operation", "Successfull", ""+ operator.getOperatorName()+ " registered");
+		}catch(SQLIntegrityConstraintViolationException e) 
+		{
+			e.printStackTrace();
+			FormFunctions.alertMessageErr("Registerin New Operator", "Failed", "There is a record with this name");
+			
+			
 		}
 		
-	
 		
 		
 		
-		
+		catch(Exception e) 
+		{
+			
+			e.printStackTrace();
+			
+		}
 		
 		
 		
 	}
+	
+	
+
+
+	public ObservableList<transactions> bringTransactions(String sql,LocalDate startDate,LocalDate endDate)  
+	{
+		ObservableList<transactions> selectedTransactions=FXCollections.observableArrayList();
+	 
+    	
+    	try {
+    		
+    		ResultSet result;
+    		if(startDate!=null && endDate!=null) {
+    		PreparedStatement ps = connection.prepareStatement(sql);
+    		ps.setObject(1, startDate);
+    		ps.setObject(2, endDate);
+            result = ps.executeQuery();
+            }else 
+            {   sql="SELECT * FROM transactions";
+            	PreparedStatement ps=connection.prepareStatement(sql);
+            	result=ps.executeQuery();
+            }
+            
+            while(result.next()) 
+            {
+            
+            	
+            	selectedTransactions.add(new transactions(
+                		result.getDouble("amount"),
+                		result.getObject("transactionDate",LocalDate.class),
+                		result.getString("transactionType")
+                		));
+            
+            
+            }
+            return selectedTransactions;
+            
+       
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			
+			
+		}
+		return selectedTransactions;
+		
+		
+		
+	}
+	
+	
+	public void addTransaction(transactions transaction)  
+	{
+		try {
+    		String query="INSERT INTO transactions (amount, transactionDate, transactionType) VALUES (?, ?, ?)";
+    		PreparedStatement ps=connection.prepareStatement(query);
+    		ps.setDouble(1,transaction.getAmount());
+    		ps.setObject(2,transaction.getTransactionDate());
+    		ps.setString(3,transaction.getTransactionType());
+    		
+    		
+    		
+    		ps.executeUpdate();
+    		
+		}
+    		catch(Exception e) 
+    		{
+    			
+    			e.printStackTrace();
+    			
+    		}
+    				
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	public void updateMember(member newVersionMember,member oldVersionMember,String logType) 
 	{
 		try 
 		{
-			String query="UPDATE members SET memberName=?, memberMembership=?,  creationDate=?, membershipStart=?, membershipEnd=?, gender=?, phoneNumber=?, birthDate=?, membershipPeriod=?, balance=? WHERE memberID=?";
+			String query="UPDATE members SET memberName=?, memberMembership=?,  creationDate=?, membershipStart=?, membershipEnd=?, gender=?, phoneNumber=?, birthDate=?, membershipPeriod=?, balance=?, paidBasePrice=? WHERE memberID=?";
 			PreparedStatement ps=connection.prepareStatement(query);
 			ps.setString(1,newVersionMember.getMemberName());
 			ps.setString(2,newVersionMember.getMemberMembership());
@@ -171,7 +277,8 @@ public class database {
 			ps.setObject(8,newVersionMember.getBirthDate());
 			ps.setString(9,newVersionMember.getMembershipPeriod());
 			ps.setDouble(10,newVersionMember.getBalance());
-			ps.setInt(11, newVersionMember.getMemberID());
+			ps.setDouble(11, newVersionMember.getPaidBasePrice());
+			ps.setInt(12, newVersionMember.getMemberID());
 			int success=ps.executeUpdate();
 			
 			
@@ -180,7 +287,7 @@ public class database {
 	    	    			+oldVersionMember.getMemberMembership()+"---->"+newVersionMember.getMemberMembership()+"\n"+oldVersionMember.getMembershipStart()+"---->"+newVersionMember.getMembershipStart()+"\n"+oldVersionMember.getMembershipEnd()+"---->"+newVersionMember.getMembershipEnd();
 	    	FormFunctions.createLog(logType,logDetails);
 	    	database db=new database();
-			FormFunctions.setLogs(db.bringLogs());
+	
 			db.closeConnection();
 			
 			
@@ -216,7 +323,8 @@ public class database {
               		result.getObject("membershipStart",LocalDate.class),
               		result.getObject("membershipEnd",LocalDate.class),
               		result.getInt("balance"),
-              		result.getObject("creationDate",LocalDate.class)
+              		result.getObject("creationDate",LocalDate.class),
+              		result.getDouble("paidBasePrice")
               		));
           
           
@@ -285,45 +393,88 @@ public class database {
         
         
         
-        
-        public ObservableList<logs> bringLogs()
-    	{
-    		try {
-    		ObservableList<logs> logs=FXCollections.observableArrayList();
-    		String Query="SELECT * FROM logs";
-    		Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(Query);
-            
-            while(result.next()) 
-            {
-            
-            	
-            	logs.add(new logs(
-                		result.getInt("logID"),
-                		result.getString("logType"),
-                		result.getString("logOperator"),
-                		result.getObject("logDate",LocalDate.class),
-                		result.getString("logDetails")
-                		));
-            
-            
-            }
-            return logs;
-       
-		}catch(Exception e)
-		{
-			System.out.println(e);
-			return null;
-			
-		}
-		
-		
-		
-	
-		
-		
-		
-	}
+ 
+     
+        	
+        	public ObservableList<logs> logOperations (String sql,List<Object> psValues)  
+        	{
+        		ObservableList<logs> foundLogs=FXCollections.observableArrayList();
+        		try {
+        		PreparedStatement ps=this.connection.prepareStatement(sql);
+        		
+        		
+        		for(int i=0; i<psValues.size();i++) 
+        		{
+        			
+        			
+        		 if(psValues.get(i) instanceof String) 
+        		 {
+        			 
+        			 ps.setString(i+1,(String)psValues.get(i));
+        			 
+        			 
+        		 }
+        		 else if(psValues.get(i) instanceof Boolean) 
+        		 {
+        			 
+        			 ps.setBoolean(i+1, (Boolean)psValues.get(i));
+        			 
+        			 
+        		 }
+        		 
+        		 else if(psValues.get(i) instanceof Object) 
+        		 {
+        			 
+        			 ps.setObject(i+1,(Object)psValues.get(i));
+        			 
+        			 
+        		 }
+        			
+        			
+        			
+        			
+        		}//psvalues for
+        		
+        	  
+        	    ResultSet rs=ps.executeQuery();
+        	    while(rs.next()) 
+                {
+                
+                	
+                	foundLogs.add(new logs(
+                    		rs.getInt("logID"),
+                    		rs.getString("logType"),
+                    		rs.getString("logOperator"),
+                    		rs.getObject("logDate",LocalDate.class),
+                    		rs.getString("logDetails")
+                    		));
+                
+                
+                }
+                return foundLogs;
+        	    
+        		}catch(SQLIntegrityConstraintViolationException e) 
+        		{
+        			e.printStackTrace();
+        			FormFunctions.alertMessageErr("Registerin New Operator", "Failed", "There is a record with this name");
+        			
+        			
+        		}
+        		
+        		
+        		
+        		
+        		catch(Exception e) 
+        		{
+        			
+        			e.printStackTrace();
+        			
+        		}
+        		
+        		
+        		return foundLogs;
+        	
+        }
         
         
         
@@ -413,7 +564,7 @@ public class database {
         public void registerLog(logs log) 
     	{
     		try {
-    			System.out.println("registerlog");
+    			
     		String query="INSERT INTO logs (logType, logOperator, logDate, logDetails) VALUES (?, ?, ?, ?)";
     		PreparedStatement ps=connection.prepareStatement(query);
     		ps.setString(1,log.getLogType());
@@ -444,7 +595,7 @@ public class database {
 	public void registerMember(model.member member) throws SQLException 
 	{
 		try {
-		String query="INSERT INTO members (memberName, memberMembership, creationDate, membershipStart, membershipEnd, gender, phoneNumber, birthDate, membershipPeriod, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String query="INSERT INTO members (memberName, memberMembership, creationDate, membershipStart, membershipEnd, gender, phoneNumber, birthDate, membershipPeriod, balance,paidBasePrice) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 		PreparedStatement ps=connection.prepareStatement(query);
 		ps.setString(1,member.getMemberName());
 		ps.setString(2,member.getMemberMembership());
@@ -456,6 +607,7 @@ public class database {
 		ps.setObject(8,member.getBirthDate());
 		ps.setString(9,member.getMembershipPeriod());
 		ps.setDouble(10,member.getBalance());
+		ps.setDouble(11, member.getPaidBasePrice());
 		
 		
 		int success=ps.executeUpdate();
@@ -468,7 +620,7 @@ public class database {
     						+member.getMembershipPeriod()+"\nBalance: "+member.getBalance();
     				FormFunctions.createLog("New Member", logDetails);
     				database db=new database();
-    				FormFunctions.setLogs(db.bringLogs());
+    	
     				db.closeConnection();
 			
 		}
@@ -494,7 +646,7 @@ public class database {
 		
 	}
 	
-	public void updateItem(items item) 
+	public void updateItem(items oldItem,items item) 
 	{
 		try 
 		{
@@ -504,7 +656,7 @@ public class database {
 			ps.setInt(2,item.getStockCount());
 			ps.setDouble(3,item.getSellingPrice());
 			ps.setObject(4,item.getUnitCost());
-			ps.setObject(5,item.getItemName());
+			ps.setObject(5,oldItem.getItemName());
 			
 			int success=ps.executeUpdate();
 			
@@ -521,7 +673,7 @@ public class database {
 	
 	public void registerPackage(model.membership membership) throws SQLException 
 	{
-		System.out.println("success");
+		
 		
 		try {
 		String query="INSERT INTO membership_packages values(?,?,?,?,?)";
@@ -593,11 +745,13 @@ public class database {
 		
 		   String memberUpdate="Update members SET memberMembership=? Where memberMembership=?";
 		   PreparedStatement ps2=connection.prepareStatement(memberUpdate);
-		   ps.setString(1,newVersion.getMembershipName());
-		   int count2=ps.executeUpdate();
+		   ps2.setString(1,newVersion.getMembershipName());
+		   ps2.setString(2, oldVersion.getMembershipName());
+		   System.out.println(oldVersion.getMembershipName() +" "+newVersion.getMembershipName());
+		   int count2=ps2.executeUpdate();
 		   if(count2>0) 
 		   {
-			   FormFunctions.alertMessageInf("Updating Package", "Package Update Operation", "Successfull." + count2 + "Members who puchase"+ oldVersion.getMembershipName()+ "Now has" +newVersion.getMembershipName());
+			   FormFunctions.alertMessageInf("Updating Package", " Package Update Operation ", "Successfull. " + count2 + " Members who purchased '"+ oldVersion.getMembershipName()+ "' Now has '" +newVersion.getMembershipName()+"'");
 			   
 		   }
 		   else 
@@ -626,7 +780,7 @@ public class database {
 		oldVersion.getAccesibleZones()+"---->"+newVersion.getAccesibleZones()+"\n"+oldVersion.getPeriods()+"---->"+newVersion.getPeriods()+"\n"+oldVersion.getDiscountRate()+"---->"+newVersion.getDiscountRate();
 		FormFunctions.createLog("Package Update", logDetails);
 		database db=new database();
-		FormFunctions.setLogs(db.bringLogs());
+	
 		db.closeConnection();
 		
 	}
@@ -657,6 +811,30 @@ public class database {
 		
 		
 	}
+	
+	
+	public void deleteItem(items item) 
+	{
+		try 
+		{
+			String query="DELETE FROM items WHERE itemNamee=? ";
+			PreparedStatement ps=connection.prepareStatement(query);
+			ps.setString(1, item.getItemName());
+			ps.executeUpdate();
+			
+			
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	
+	
 	
 	
 	public void deletePackage(membership membership) 

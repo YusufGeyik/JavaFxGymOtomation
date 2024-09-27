@@ -12,6 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import model.FormFunctions;
 import model.items;
@@ -20,10 +23,13 @@ import model.cartItems;
 import model.database;
 public class snackBar {
 
-	ObservableList<cartItems> cart=FXCollections.observableArrayList();
-	ObservableList<items> inventory=FormFunctions.getItems();
-	double total=0;
-	items item = null;
+	
+    @FXML
+    private ImageView fromCartImgview;
+    
+    
+    @FXML
+    private ImageView toCartImgview;
     @FXML
     private ResourceBundle resources;
 
@@ -57,16 +63,14 @@ public class snackBar {
 
     @FXML
     private Button clearCartbt1;
-
-    @FXML
-    private Button findItembt;
+    
+    
 
     @FXML
     private TextField findItemtxt;
-
-    @FXML
-    private Button findMemberbt;
-
+    
+    
+  
     @FXML
     private TextField findMembertxt;
 
@@ -100,6 +104,11 @@ public class snackBar {
     @FXML
     private Button completeSalebt;
     
+
+	ObservableList<cartItems> cart=FXCollections.observableArrayList();
+	ObservableList<items> inventory=FormFunctions.getItems();
+	double total=0;
+	items item = null;
     @FXML
     void completeSaleClicked(ActionEvent event) {
 
@@ -119,13 +128,13 @@ public class snackBar {
     		{
     			if(inv.getItemName().equals(ci.getItemName())) 
     			{
-    				db.updateItem(inv);
+    				db.updateItem(inv,inv);
     			}
     		}
     	    }
     	 
     	    FormFunctions.createLog("SnackBar", logDetails);
-    		FormFunctions.setLogs(db.bringLogs());
+    		
     		
     	    cart.clear();
         	cartView.refresh();
@@ -173,21 +182,28 @@ public class snackBar {
     }
 
     @FXML
-    void findItemClicked(ActionEvent event) {
-
+    void findItem(KeyEvent event) {
+    	if(FormFunctions.isString(findItemtxt.getText())==true) {
      ObservableList<items>foundItems=FormFunctions.findItemsByName(findItemtxt.getText());
      FormFunctions.addDataToTableView(barView,foundItems, itemNametc,
  			stockCounttc, itemPricetc,
  			unitCosttc);
+    	}else
+    		FormFunctions.addDataToTableView(barView,FormFunctions.getItems(), itemNametc,
+    	 			stockCounttc, itemPricetc,
+    	 			unitCosttc);
     	
     }
     
 
     @FXML
-    void findMemberClicked(ActionEvent event) {
+    void findMember(KeyEvent event) {
+    	if(FormFunctions.isString(findMembertxt.getText())==true) {
     	ObservableList<member> member=FormFunctions.findMembersByName(findMembertxt.getText());
     	FormFunctions.memberTableSnackBar(memberView, member, memberNametc, membershiptc, phoneNumbertc, balancetc);
-    }
+    	}else
+    		FormFunctions.memberTableSnackBar(memberView, FormFunctions.getMembers(), memberNametc, membershiptc, phoneNumbertc, balancetc);
+    	}
     
     @FXML
     void removeFromCart(MouseEvent event) {
@@ -248,9 +264,12 @@ public class snackBar {
      
     	if(barView.getSelectionModel().getSelectedIndex()!=-1) //operator selected an item from barView
     	{
-    	
-    		
+ 
     		items item=barView.getSelectionModel().getSelectedItem();
+    		
+    		if(item.getStockCount()>=1) {
+    		
+    		
     	    cartItems cartItem=null;
     		if(cart.isEmpty()) // if cart is empty
     		{
@@ -304,18 +323,24 @@ public class snackBar {
     		
     		}
     		
-    		//
+    		}//is Inventory Stock bigger than 1?
+    		else 
+    			FormFunctions.alertMessageErr(null, null, "SOLD OUT");
     	}
     	else //operator didn't choose an item from barView
     	{
     		FormFunctions.alertMessageErr(null, null, "please choose the item you want to add to cart.");
     	}
     	cartView.getSelectionModel().clearSelection();
+  
     }
-
     @FXML
     void initialize() {
   
+    	Image toCartImg =new Image(getClass().getResourceAsStream("/images/cartAddAndSubtract.jpg"));
+    	toCartImgview.setImage(toCartImg);
+    	Image fromCartImg=new Image(getClass().getResourceAsStream("/images/cartAddAndSubtract.jpg"));
+    	fromCartImgview.setImage(fromCartImg);
     	FormFunctions.memberTableSnackBar(memberView, FormFunctions.getMembers(), memberNametc, membershiptc, phoneNumbertc, balancetc);
     	FormFunctions.addDataToTableView(barView,inventory, itemNametc,
     			stockCounttc, itemPricetc,

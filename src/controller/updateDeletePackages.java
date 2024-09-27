@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import model.FormFunctions;
@@ -27,6 +29,8 @@ import model.member;
 import model.membership;
 public class updateDeletePackages {
 
+    @FXML
+    private TextField searchtxt;
 	@FXML
     private ResourceBundle resources;
 
@@ -90,6 +94,47 @@ public class updateDeletePackages {
     @FXML
     private Button updateBt;
 
+    @FXML
+    void searchInputReceived(KeyEvent event) {
+
+    	try {
+    	 	
+        	if(searchtxt.getText().isEmpty()) //button clicked without any input
+        	{
+        	
+        		FormFunctions.addDataToTableView(cPackageTable, FormFunctions.getPackages(), packageName,packagePrice,accesibleZones,periods,discountRate);
+        		
+        
+        		
+        	}
+        	else //there is an input
+        	{ 
+        	
+        		ObservableList<membership> foundPackages=FXCollections.observableArrayList();
+        	for(membership membershipPackage : FormFunctions.getPackages())
+        	{
+        		
+        
+        		if(membershipPackage.getMembershipName().toLowerCase().contains(searchtxt.getText()))
+        		{
+        			foundPackages.add(membershipPackage);
+        			
+        		}
+        	}
+        	
+        	
+        	FormFunctions.addDataToTableView(cPackageTable, foundPackages, packageName,packagePrice,accesibleZones,periods,discountRate);
+        	
+      
+        	}
+        	
+        	}catch(Exception e) 
+        	{
+        		
+        		e.printStackTrace();
+        		
+        	}
+    }
 
     @FXML
     void printPackageData(membership oldmembership) {
@@ -117,7 +162,7 @@ public class updateDeletePackages {
          
     
          String parsedZones[]=oldmembership.getAccesibleZones().split(" ");
-         String parsedPeriods[]=oldmembership.getPeriods().split("  ");
+         String parsedPeriods[]=oldmembership.getPeriods().split(",");//değişti
        
      
  	        
@@ -157,11 +202,50 @@ public class updateDeletePackages {
     		
     	}
     	
+    
     	
     
     @FXML
     void updatePackageData(ActionEvent event) {
 
+
+		List<CheckBox> zones=new ArrayList<>();
+	    List<CheckBox> lperiods=new ArrayList<>();
+	    zones.add(cFitnessChckbx);     
+	    zones.add(cPoolchckbx);     
+	    zones.add(cSpiningChckbx); 
+	    zones.add(cZumbaChckbx); 
+	    
+	    lperiods.add(cOneMonth);
+	    lperiods.add(cThreeMonths);
+	    lperiods.add(cSixMonths);
+	    lperiods.add(cTwelveMonths);
+	        
+
+	
+	String zaccesibleZones="";
+	
+	for(CheckBox z : zones) 
+	{
+		if(z.isSelected())
+			zaccesibleZones+=z.getText()+" ";
+		
+	}
+	
+	String pPeriods="";
+	
+	for(CheckBox p : lperiods) 
+	{
+		if(p.isSelected())
+			pPeriods+=p.getText()+",";
+		
+	}
+	
+	
+    	if(FormFunctions.isString(cPackageNameTxt.getText())==true && FormFunctions.isDouble(cPackagePriceTxt.getText())==true
+    			&& FormFunctions.isDouble(discountRatetxt.getText())==true && !zaccesibleZones.equals("") && !pPeriods.equals(""))   {
+    	
+    	
     	       if(cPackageTable.getSelectionModel().getSelectedIndex()!=-1) {
     	       
     	    	try {
@@ -170,47 +254,14 @@ public class updateDeletePackages {
     	    		
     	    	double discountRate=1-(Double.parseDouble(discountRatetxt.getText())/100); //ready to multiply with base price for long-term memberships.
     	    	
-    	    	System.out.println(discountRate);
     	    	
-    	    	
-    	    		List<CheckBox> zones=new ArrayList<>();
-    	    	    List<CheckBox> periods=new ArrayList<>();
-    	    	    zones.add(cFitnessChckbx);     
-    	    	    zones.add(cPoolchckbx);     
-    	    	    zones.add(cSpiningChckbx); 
-    	    	    zones.add(cZumbaChckbx); 
-    	    	    
-    	    	    periods.add(cOneMonth);
-    	    	    periods.add(cThreeMonths);
-    	    	    periods.add(cSixMonths);
-    	    	    periods.add(cTwelveMonths);
-    	    	        
-
-    	    	
-    	    	String accesibleZones="";
-    	    	
-    	    	for(CheckBox z : zones) 
-    	    	{
-    	    		if(z.isSelected())
-    	    			accesibleZones+=z.getText()+" ";
-    	    		
-    	    	}
-    	    	
-    	    	String pPeriods="";
-    	    	
-    	    	for(CheckBox p : periods) 
-    	    	{
-    	    		if(p.isSelected())
-    	    			pPeriods+=p.getText()+" ";
-    	    		
-    	    	}
     	    	
     	    	
     	       
     	    	model.membership newVersion=new model.membership(
     	    			cPackageNameTxt.getText(),
     	    			Double.parseDouble(cPackagePriceTxt.getText()),
-    	    			accesibleZones,
+    	    			zaccesibleZones,
     	    			pPeriods,
     	    			discountRate
     	    			);
@@ -241,6 +292,9 @@ public class updateDeletePackages {
     	       {
     	    	   FormFunctions.alertMessageErr("Updating Package", "Package Update Operation", "unsuccessfull,please choose the package you wanted to update first");
     	       }
+    	       
+    }else
+    	FormFunctions.alertMessageErr("Updating Package Operation", "Failed", "Please provide valid values.");
     }
     
 
@@ -259,35 +313,54 @@ public class updateDeletePackages {
     	 {
     	
     		 if(FormFunctions.getPackages().size()>1 || (FormFunctions.getPackages().size()==1 && FormFunctions.getMembers().size()==0 )) {
-    		 // databasede kaç paket var bak 1 tane varsa bu paketle kayıtlı üye var mı oana bak
+    		 
     			 membership oldMembership=cPackageTable.getSelectionModel().getSelectedItem();
     			 
     			 ObservableList<String>packages=FormFunctions.bringPackageNames(FormFunctions.getPackages());
     			 packages.remove(oldMembership.getMembershipName());
-    		 ChoiceDialog<String> dia=new ChoiceDialog<String>("",packages);
-    		 CheckBox chckbx=new CheckBox();
-    		 chckbx.setText("Calculate the refunds or additional payment amounts related to transitioning subscribers who have purchased the package to be deleted to another package? Calculations will be made based on current emmbership fees.");
-    		 dia.setTitle("Deleting Package");
-    		 dia.setHeaderText("Deleting Package Operation");
-    		 dia.setContentText("The members who have purchased the package to be deleted will be transitioned to which package? Will refunds or additional payments be calculated?");
+    			
+    			 ChoiceDialog<String>  dia=new ChoiceDialog<String>("",packages);
+    			 
+    		 
+    			 
+    		
     		 VBox vbox = new VBox();
-    		 vbox.getChildren().add(chckbx);
-
+    		 CheckBox chckbx=new CheckBox();
+    		 chckbx.setText("Calculate the refunds or additional payment amounts related to transitioning subscribers who have purchased the package to be deleted to another package? Calculations will be made based on current membership fees.");
+    		 vbox.getChildren().addAll(chckbx);
+    	
+    		 if(packages.isEmpty()) 
+    		 {
+    			 dia.setTitle("Deleting Package");
+        		 dia.setHeaderText("Deleting Package Operation");
+        		 dia.setContentText("There is not any memebers who purchased this membership.Click 'OK' to delete it.");
+    			
+    			 chckbx.setVisible(false);
+    		 }
+    		 else {
+    		
+    			
+    			 dia.setTitle("Deleting Package");
+        		 dia.setHeaderText("Deleting Package Operation");
+        		 dia.setContentText("The members who have purchased the package to be deleted will be transitioned to which package? Will refunds or additional payments be calculated?");
+        		 dia.getDialogPane().setContent(new VBox(dia.getDialogPane().getContent(), vbox));
+        		 dia.setSelectedItem(packages.get(0));
     		 
-    		 
+    			chckbx.setVisible(true);
+    		 }
     		 
     		 Optional<String> choice=dia.showAndWait();
     		 choice.ifPresent(selected->{
     	     
     	      
-    	     
+    	       System.out.println(selected);
     			 
     			 String newPackageName=selected;
     			 
     			
     			 if(chckbx.isSelected()==true) 
     			 {
-    				 System.out.println("true");
+    				 
     				 double oldDiscountRate=oldMembership.getDiscountRate();
     				 String oldPackageName=oldMembership.getMembershipName();
     				 for(membership newMembership:FormFunctions.getPackages()) 
@@ -296,7 +369,7 @@ public class updateDeletePackages {
     					 double newDiscountRate=newMembership.getDiscountRate();
     					 database db=new database();
     					 try {
-							db.deletePackageCalculations(oldDiscountRate, newDiscountRate, oldPackageName,newPackageName);
+							FormFunctions.deletePackageCalculations(oldDiscountRate, newDiscountRate, oldPackageName,newPackageName,oldMembership);
 						
 							db.deletePackage(oldMembership);
 							
@@ -335,8 +408,7 @@ public class updateDeletePackages {
     				 }
     				 
     				 db.deletePackage(oldMembership);
-    				    FormFunctions.createLog("Delete Package", logDetails);
-    				    FormFunctions.setLogs(db.bringLogs());
+    				    FormFunctions.createLog("Delete Package", logDetails);			  
     				    FormFunctions.setPackages(db.bringPackages());
 						FormFunctions.setMembers(db.bringMembers());
 						FormFunctions.addDataToTableView(cPackageTable, FormFunctions.getPackages(), packageName,packagePrice,accesibleZones,periods,discountRate);

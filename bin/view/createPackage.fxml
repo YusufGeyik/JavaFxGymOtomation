@@ -22,6 +22,7 @@
       </TableView>
       <TextField fx:id="cPackageNameTxt" layoutX="239.0" layoutY="344.0" prefHeight="25.0" prefWidth="194.0" promptText="Package Name" />
       <TextField fx:id="cPackagePriceTxt" layoutX="237.0" layoutY="379.0" prefHeight="25.0" prefWidth="194.0" promptText="Package Standart Price" />
+      <TextField fx:id="discountRatetxt" layoutX="239.0" layoutY="415.0" prefHeight="25.0" prefWidth="194.0" promptText="Discount Rate in %" />
       <CheckBox fx:id="cFitnessChckbx" layoutX="241.0" layoutY="483.0" mnemonicParsing="false" text="Fitness" />
       <CheckBox fx:id="cPoolchckbx" layoutX="241.0" layoutY="500.0" mnemonicParsing="false" text="Pool" />
       <CheckBox fx:id="cZumbaChckbx" layoutX="241.0" layoutY="517.0" mnemonicParsing="false" text="Zumba" />
@@ -29,12 +30,11 @@
       <Label layoutX="218.0" layoutY="457.0" text="Accessible Zones" />
       <Button fx:id="saveBt" layoutX="289.0" layoutY="572.0" mnemonicParsing="false" onAction="#SaveMemberShipPackage" prefHeight="48.0" prefWidth="90.0" text="Save" />
       <Label layoutX="262.0" layoutY="51.0" prefHeight="17.0" prefWidth="184.0" text="Current Membership Packages" />
-      <CheckBox fx:id="cOneMonth" layoutX="360.0" layoutY="483.0" mnemonicParsing="false" text="1 Month" />
-      <CheckBox fx:id="cThreeMonths" layoutX="360.0" layoutY="517.0" mnemonicParsing="false" text="3 Months" />
-      <CheckBox fx:id="cSixMonths" layoutX="360.0" layoutY="500.0" mnemonicParsing="false" text="6 Months" />
+      <CheckBox fx:id="cOneMonth" layoutX="360.0" layoutY="483.0" mnemonicParsing="false" text="1 Months" />
+      <CheckBox fx:id="cThreeMonths" layoutX="360.0" layoutY="500.0" mnemonicParsing="false" text="3 Months" />
+      <CheckBox fx:id="cSixMonths" layoutX="360.0" layoutY="517.0" mnemonicParsing="false" text="6 Months" />
       <CheckBox fx:id="cTwelveMonths" layoutX="360.0" layoutY="534.0" mnemonicParsing="false" text="12 Months" />
       <Label layoutX="344.0" layoutY="457.0" text="Purchasable Periods" />
-      <TextField fx:id="discountRatetxt" layoutX="239.0" layoutY="415.0" prefHeight="25.0" prefWidth="194.0" promptText="Discount Rate in %" />
       <Label layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="344.0" text="New Membership Package">
          <font>
             <Font size="17.0" />
@@ -45,5 +45,6 @@
             <Font size="17.0" />
          </font>
       </Label>
+      <TextField fx:id="searchtxt" layoutY="47.0" onKeyPressed="#searchInputReceived" prefHeight="25.0" prefWidth="194.0" promptText="Search by Package Name" />
    </children>
 </AnchorPane>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.updateDeleteOperator">
+   <children>
+      <TextField fx:id="findOperatortxt" layoutX="1.0" layoutY="84.0" onKeyPressed="#findOperator" prefHeight="25.0" prefWidth="229.0" promptText="Operator Name" />
+      <TextField fx:id="operatorNametxt" layoutX="19.0" layoutY="437.0" prefHeight="25.0" prefWidth="157.0" promptText="Name" />
+      <PasswordField fx:id="operatorPasswordtxt" layoutX="19.0" layoutY="468.0" prefHeight="25.0" prefWidth="157.0" promptText="Operator Password" />
+      <Button fx:id="updatebt" layoutX="19.0" layoutY="498.0" mnemonicParsing="false" onAction="#updateMember" prefHeight="56.0" prefWidth="157.0" text="Update" />
+      <Label layoutX="6.0" layoutY="28.0" text="Update/Delete Operator">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TableView fx:id="operatorView" layoutY="115.0" prefHeight="311.0" prefWidth="693.0">
+        <columns>
+          <TableColumn fx:id="nametc" prefWidth="61.0" text="Name" />
+          <TableColumn fx:id="registerMembertc" prefWidth="90.0" text="Register Member" />
+            <TableColumn fx:id="upMembertc" prefWidth="72.0" text="UpMember" />
+            <TableColumn fx:id="createPackagetc" prefWidth="74.0" text="CreatePackage" />
+            <TableColumn fx:id="upPackagetc" minWidth="0.0" prefWidth="64.0" text="UpPackage" />
+            <TableColumn fx:id="selltc" minWidth="2.0" prefWidth="30.0" text="Sell" />
+            <TableColumn fx:id="registerInvtc" minWidth="0.0" prefWidth="74.0" text="RegisterInv" />
+            <TableColumn fx:id="updateInvtc" minWidth="0.0" prefWidth="65.0" text="UpdateInv" />
+            <TableColumn fx:id="logstc" minWidth="0.0" prefWidth="82.0" text="AccessToLogs" />
+            <TableColumn fx:id="takesPaymentstc" editable="false" minWidth="0.0" prefWidth="76.0" text="TakesPayments" />
+            <TableColumn fx:id="operatorPasswordtc" editable="false" minWidth="0.0" prefWidth="84.0" text="OperatorPassword" visible="false" />
+        </columns>
+      </TableView>
+      <CheckBox fx:id="createPackagecheck" layoutX="192.0" layoutY="464.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="124.0" text="Creating Package" />
+      <CheckBox fx:id="registerMembercheck" layoutX="192.0" layoutY="441.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="124.0" text="Registering Member" />
+      <CheckBox fx:id="updateMembercheck" layoutX="358.0" layoutY="441.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="157.0" text="Update/Delete Member" />
+      <CheckBox fx:id="updatePackagecheck" layoutX="358.0" layoutY="464.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="157.0" text="Update/Delete Package" />
+      <CheckBox fx:id="sellcheck" layoutX="192.0" layoutY="485.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="124.0" text="SnackBar Sell" />
+      <CheckBox fx:id="registerInvcheck" layoutX="358.0" layoutY="485.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="173.0" text="Registering Inventory Item" />
+      <CheckBox fx:id="updateInvcheck" layoutX="192.0" layoutY="509.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="157.0" text="Update/Delete Inventory" />
+      <CheckBox fx:id="accessLogscheck" layoutX="358.0" layoutY="509.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="124.0" text="Access to Logs" />
+      <CheckBox fx:id="takesPaymentscheck" layoutX="192.0" layoutY="534.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="124.0" text="Takes Payment" />
+      <Button fx:id="delete" layoutX="531.0" layoutY="430.0" mnemonicParsing="false" onAction="#deleteClicked" prefHeight="56.0" prefWidth="157.0" text="Delete Oeprator" />
+   </children>
+</AnchorPane>

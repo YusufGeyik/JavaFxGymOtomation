@@ -11,8 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import model.FormFunctions;
 import model.member;
+import model.transactions;
 
 public class payment {
 
@@ -34,9 +36,8 @@ public class payment {
 
     @FXML
     private TableColumn<member, LocalDate> endDatetc;
-
-    @FXML
-    private Button findbt;
+    
+    
 
     @FXML
     private TableColumn<member, String> gendertc;
@@ -82,6 +83,10 @@ public class payment {
     	member.setBalance(newBalance);
     	model.database db=new model.database();
     	db.updateMember(member,oldMember,"Payment");
+    	//customer pays
+    	transactions transaction=new transactions(Double.parseDouble(paymentAmount.getText()), LocalDate.now(), "Customer added balance");
+    	db.addTransaction(transaction);
+		
     	FormFunctions.setMembers(db.bringMembers());
     	FormFunctions.addDataToTableView(memberview, FormFunctions.getMembers(),
     			idtc, nametc,
@@ -89,6 +94,7 @@ public class payment {
     			endDatetc,gendertc,phoneNumbertc,
     			birthDatetc,balancetc,periodtc);
     	paymentAmount.setText("");
+    	
     	db.closeConnection();
     	FormFunctions.alertMessageInf("Payment", "Payment Operation", "Successfull.New balance is "+member.getBalance());
     	}
@@ -102,39 +108,53 @@ public class payment {
     	
     }
 
+  
     @FXML
-    void findMember(ActionEvent event) {
+    void findMember(KeyEvent event) {
     	
-    	try{
-        	ObservableList<member> foundMembers=FormFunctions.findMembersByName( memberNametxt.getText());
-        	if(!foundMembers.equals(null)) 
-        	{
-        		FormFunctions.addDataToTableView(memberview, foundMembers,
-            			idtc, nametc,
-            			packageNametc, startDatetc,
-            			endDatetc,gendertc,phoneNumbertc,
-            			birthDatetc,balancetc,periodtc);
-        		
-        		
-        		
-        	}
-        	else 
-        	{
-        		FormFunctions.addDataToTableView(memberview, FormFunctions.getMembers(),
-            			idtc, nametc,
-            			packageNametc, startDatetc,
-            			endDatetc,gendertc,phoneNumbertc,
-            			birthDatetc,balancetc,periodtc);
-        	}
+    	if(FormFunctions.isString(memberNametxt.getText())==true) {
         	
-        	}catch(Exception e) 
-        	{
-        		e.printStackTrace();
-        	}
+        	try{
+            	ObservableList<member> foundMembers=FormFunctions.findMembersByName( memberNametxt.getText());
+            	if(!foundMembers.equals(null)) 
+            	{
+            		FormFunctions.addDataToTableView(memberview, foundMembers,
+                			idtc, nametc,
+                			packageNametc, startDatetc,
+                			endDatetc,gendertc,phoneNumbertc,
+                			birthDatetc,balancetc,periodtc);
+            		
+            		
+            		
+            	}
+            	else 
+            	{
+            		FormFunctions.addDataToTableView(memberview, FormFunctions.getMembers(),
+                			idtc, nametc,
+                			packageNametc, startDatetc,
+                			endDatetc,gendertc,phoneNumbertc,
+                			birthDatetc,balancetc,periodtc);
+            	}
+            	
+            	}catch(Exception e) 
+            	{
+            		e.printStackTrace();
+            	}
+        	
+        }
+        else
+        	FormFunctions.addDataToTableView(memberview, FormFunctions.getMembers(),
+        			idtc, nametc,
+        			packageNametc, startDatetc,
+        			endDatetc,gendertc,phoneNumbertc,
+        			birthDatetc,balancetc,periodtc);
     	
 
     }
-
+    
+    
+    
+    
     @FXML
     void initialize() {
         

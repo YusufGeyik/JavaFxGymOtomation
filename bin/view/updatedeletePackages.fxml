@@ -20,8 +20,9 @@
             <TableColumn fx:id="discountRate" editable="false" minWidth="0.0" prefWidth="130.0" text="Long Term Price Rate" />
         </columns>
       </TableView>
-      <TextField fx:id="cPackageNameTxt" layoutX="241.0" layoutY="344.0" prefHeight="25.0" prefWidth="194.0" promptText="Package Name" />
-      <TextField fx:id="cPackagePriceTxt" layoutX="241.0" layoutY="378.0" prefHeight="25.0" prefWidth="194.0" promptText="Package Base Price" />
+      <TextField fx:id="cPackageNameTxt" layoutX="241.0" layoutY="344.0" prefHeight="25.0" prefWidth="194.0" promptText="GOLD" />
+      <TextField fx:id="cPackagePriceTxt" layoutX="241.0" layoutY="378.0" prefHeight="25.0" prefWidth="194.0" promptText="100" />
+      <TextField fx:id="discountRatetxt" layoutX="241.0" layoutY="413.0" prefHeight="25.0" prefWidth="194.0" promptText="10" />
       <CheckBox fx:id="cFitnessChckbx" layoutX="248.0" layoutY="464.0" mnemonicParsing="false" text="Fitness" />
       <CheckBox fx:id="cPoolchckbx" layoutX="248.0" layoutY="481.0" mnemonicParsing="false" text="Pool" />
       <CheckBox fx:id="cZumbaChckbx" layoutX="248.0" layoutY="498.0" mnemonicParsing="false" text="Zumba" />
@@ -29,22 +30,20 @@
       <Label layoutX="236.0" layoutY="447.0" text="Accessible Zones" />
       <Button fx:id="updateBt" layoutX="236.0" layoutY="542.0" mnemonicParsing="false" onAction="#updatePackageData" prefHeight="48.0" prefWidth="90.0" text="Update" />
       <Button fx:id="deleteBt" layoutX="338.0" layoutY="542.0" mnemonicParsing="false" onAction="#deletePackage" prefHeight="48.0" prefWidth="100.0" text="Delete Package" />
-      <CheckBox fx:id="cOneMonth" layoutX="368.0" layoutY="464.0" mnemonicParsing="false" text="1 Month" />
-      <CheckBox fx:id="cThreeMonths" layoutX="368.0" layoutY="498.0" mnemonicParsing="false" text="3 Months" />
-      <CheckBox fx:id="cSixMonths" layoutX="368.0" layoutY="481.0" mnemonicParsing="false" text="6 Months" />
+      <CheckBox fx:id="cOneMonth" layoutX="368.0" layoutY="464.0" mnemonicParsing="false" text="1 Months" />
+      <CheckBox fx:id="cThreeMonths" layoutX="368.0" layoutY="481.0" mnemonicParsing="false" text="3 Months" />
+      <CheckBox fx:id="cSixMonths" layoutX="368.0" layoutY="497.0" mnemonicParsing="false" text="6 Months" />
       <CheckBox fx:id="cTwelveMonths" layoutX="368.0" layoutY="515.0" mnemonicParsing="false" text="12 Months" />
       <Label layoutX="348.0" layoutY="447.0" text="Purchasable Periods" />
-      <TextField fx:id="discountRatetxt" layoutX="241.0" layoutY="413.0" prefHeight="25.0" prefWidth="194.0" promptText="Discount Rate in %" />
       <Label layoutX="246.0" layoutY="43.0" prefHeight="17.0" prefWidth="184.0" text="Current Membership Packages" />
       <Label layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="344.0" text="Update/Delete Membership Packages">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
-      <Label layoutX="220.0" layoutY="412.0" text="\%">
-         <font>
-            <Font size="19.0" />
-         </font>
-      </Label>
+      <Label layoutX="136.0" layoutY="417.0" text="Discount Rate in %" />
+      <Label layoutX="147.0" layoutY="348.0" text="Package Name" />
+      <Label layoutX="147.0" layoutY="382.0" text="Package Price" />
+      <TextField fx:id="searchtxt" layoutY="43.0" onKeyPressed="#searchInputReceived" promptText="Search in Package Name" />
    </children>
 </AnchorPane>

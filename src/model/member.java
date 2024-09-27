@@ -7,6 +7,15 @@ public  class member {
 
 	private int memberID;
 	private String memberName;
+	private double paidBasePrice;
+	public double getPaidBasePrice() {
+		return paidBasePrice;
+	}
+
+	public void setPaidBasePrice(double paidBasePrice) {
+		this.paidBasePrice = paidBasePrice;
+	}
+
 	private String membershipPeriod;
 	private String memberMembership;
     private String gender;
@@ -15,7 +24,7 @@ public  class member {
     private LocalDate membershipStart;
     private LocalDate membershipEnd;
     private double balance;
-  
+
     private LocalDate creationDate;
 	
 	
@@ -38,6 +47,8 @@ public  class member {
 		this.memberName=name;
 	}
 	
+
+
 	public String getMembershipPeriod() 
 	{
 		return membershipPeriod;
@@ -130,7 +141,7 @@ public  class member {
 		this.creationDate=creationDate;
 	}
 	
-public member(String memberName,String membershipPeriod,String memberMembership,String gender,String phoneNumber,LocalDate birthDate,LocalDate membershipStart, LocalDate membershipEnd,double balance,LocalDate creationDate) throws InvocationTargetException 
+public member(String memberName,String membershipPeriod,String memberMembership,String gender,String phoneNumber,LocalDate birthDate,LocalDate membershipStart, LocalDate membershipEnd,double balance,LocalDate creationDate,double paidBasePrice) throws InvocationTargetException 
 {
 	//sqle yazarken kullan
 	
@@ -144,9 +155,10 @@ public member(String memberName,String membershipPeriod,String memberMembership,
 	this.membershipEnd=membershipEnd;
 	this.balance=balance;
 	this.creationDate=creationDate;
+	this.paidBasePrice=paidBasePrice;
 }
 
-	 public member(int memberID,String memberName,String membershipPeriod,String memberMembership,String gender,String phoneNumber,LocalDate birthDate,LocalDate membershipStart, LocalDate membershipEnd,double balance,LocalDate creationDate) throws InvocationTargetException
+	 public member(int memberID,String memberName,String membershipPeriod,String memberMembership,String gender,String phoneNumber,LocalDate birthDate,LocalDate membershipStart, LocalDate membershipEnd,double balance,LocalDate creationDate,double paidBasePrice) throws InvocationTargetException
 	{
 		//sqlden çekerken kullan
 		
@@ -161,7 +173,7 @@ public member(String memberName,String membershipPeriod,String memberMembership,
 		this.balance=balance;
 		this.memberID=memberID;
 		this.creationDate=creationDate;
-
+        this.paidBasePrice=paidBasePrice;
 			
 			
 			
